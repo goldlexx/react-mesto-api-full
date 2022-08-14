@@ -1,0 +1,16 @@
+.question__login {
+  margin-top: 15px;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 14px;
+  line-height: 17px;
+  color: inherit;
+  background-color: transparent;
+  transition: 0.3s linear;
+  cursor: pointer;
+}
+
+.question__login:hover {
+  opacity: 0.6;
+}

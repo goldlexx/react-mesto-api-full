@@ -1,0 +1,22 @@
+.authorization__submit-button {
+  display: block;
+  border: none;
+  border-radius: 2px;
+  padding: 14px 0;
+  width: 100%;
+  font-size: 18px;
+  line-height: 22px;
+  transition: 0.3s linear;
+  cursor: pointer;
+}
+
+.authorization__submit-button:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 710px) {
+  .authorization__submit-button {
+    font-size: 16px;
+    line-height: 19px;
+  }
+}

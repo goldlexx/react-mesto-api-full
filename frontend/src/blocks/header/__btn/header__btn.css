@@ -1,0 +1,25 @@
+.header__btn {
+  margin: 5px 0 0 24px;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 18px;
+  line-height: 22px;
+  text-decoration: none;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.header__btn:hover {
+  opacity: 0.6;
+  transition: 0.3s linear;
+}
+
+@media (max-width: 710px) {
+  .header__btn {
+    margin-right: 30px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

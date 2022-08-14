@@ -1,0 +1,13 @@
+.authorization__form-field {
+  display: block;
+}
+
+.authorization__form-field:last-of-type {
+margin-bottom: 215px;
+}
+
+@media (max-width: 710px) {
+  .authorization__form-field:last-of-type {
+    margin-bottom: 173px;
+  }
+}
