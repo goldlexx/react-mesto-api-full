@@ -103,7 +103,7 @@ class Api {
 }
 
 const api = new Api({
-  url: 'http://api.onemore.nomoredomains.sbs',
+  url: 'http://api.onemore.nomoredomains.sbs/',
   headers: {
     'Content-Type': 'application/json',
   },
