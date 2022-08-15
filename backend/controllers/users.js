@@ -35,7 +35,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
@@ -58,7 +57,7 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-alohomora', {
         expiresIn: '7d',
       });
-      res.send({ jwt: token });
+      res.send({ token });
     })
     .catch(next);
 };

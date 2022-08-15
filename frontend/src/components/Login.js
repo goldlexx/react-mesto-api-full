@@ -12,7 +12,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
-      <Header textLink={'Регистрация'} toLink={'/sign-up'} />
+      <Header textLink={'Регистрация'} toLink={'/signup'} />
       <main>
         <section className='authorization'>
           <form

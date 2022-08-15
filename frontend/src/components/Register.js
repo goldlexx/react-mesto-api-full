@@ -14,7 +14,7 @@ const Register = ({ onRegister }) => {
 
   return (
     <>
-      <Header textLink={'Войти'} toLink={'/sign-in'} />
+      <Header textLink={'Войти'} toLink={'/signin'} />
       <main>
         <section className='authorization'>
           <form

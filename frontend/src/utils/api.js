@@ -4,6 +4,12 @@ class Api {
     this._headers = headers;
   }
 
+  _getAuthHeader() {
+    const jwt = localStorage.getItem('jwt');
+    return jwt ? { Authorization: `Bearer ${jwt}` } : {};
+  }
+
+
   checkError(res) {
     if (res.ok) {
       return res.json();
@@ -15,7 +21,7 @@ class Api {
   getUserInfo() {
     return fetch(`${this._url}users/me`, {
       method: 'GET',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then((res) => {
       return this.checkError(res);
     });
@@ -24,7 +30,7 @@ class Api {
   setUserInfo(data) {
     return fetch(`${this._url}users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         name: data.name,
         about: data.about,
@@ -37,7 +43,7 @@ class Api {
   getCardList() {
     return fetch(`${this._url}cards`, {
       method: 'GET',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then((res) => {
       return this.checkError(res);
     });
@@ -46,13 +52,12 @@ class Api {
   addNewCard(data) {
     return fetch(`${this._url}cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         name: data.name,
         link: data.link,
       }),
     }).then((res) => {
-
       return this.checkError(res);
     });
   }
@@ -60,25 +65,25 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this._url}cards/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then((res) => {
       return this.checkError(res);
     });
   }
 
   addLikeCard(id) {
-    return fetch(`${this._url}cards/likes/${id}`, {
+    return fetch(`${this._url}cards/${id}/likes`, {
       method: 'PUT',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then((res) => {
       return this.checkError(res);
     });
   }
 
   removeLikeCard(id) {
-    return fetch(`${this._url}cards/likes/${id}`, {
+    return fetch(`${this._url}cards/${id}/likes`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
     }).then((res) => {
       return this.checkError(res);
     });
@@ -87,7 +92,7 @@ class Api {
   setUserAvatar(data) {
     return fetch(`${this._url}users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: { ...this._headers, ...this._getAuthHeader() },
       body: JSON.stringify({
         avatar: data,
       }),
@@ -98,9 +103,8 @@ class Api {
 }
 
 const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-41/',
+  url: 'http://localhost:3000/',
   headers: {
-    authorization: '773f7647-9f5b-47ff-aca1-eaec927fb96b',
     'Content-Type': 'application/json',
   },
 });

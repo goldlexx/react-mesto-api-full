@@ -4,7 +4,7 @@ const { errorMessage } = require('../utils/errorMessage');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
@@ -12,7 +12,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const ownerId = req.user._id;
   Card.create({ name, link, owner: ownerId })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => errorMessage(err, req, res, next));
 };
 
@@ -39,7 +39,7 @@ module.exports.likeCard = (req, res, next) => {
     .orFail(() => {
       throw new ErrorNotFound('Карточка с таким ID - не найдена');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => errorMessage(err, req, res, next));
 };
 

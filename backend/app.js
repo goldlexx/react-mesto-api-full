@@ -16,6 +16,7 @@ const app = express();
 
 const allowedCors = [
   'localhost:3000',
+  'http://localhost:3001',
   'https://mesto.travel.nomoredomains.sbs',
   'http://mesto.travel.nomoredomains.sbs',
 ];
@@ -24,13 +25,14 @@ app.use((req, res, next) => {
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const { origin } = req.headers;
   const { method } = req;
+  const requestHeaders = req.headers['access-control-request-headers'];
 
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
-
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
     return res.end();
   }
   next();

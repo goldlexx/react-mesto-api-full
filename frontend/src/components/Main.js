@@ -13,7 +13,6 @@ const Main = ({
 }) => {
   const currentUser = useContext(CurrentUserContext);
   const { name, about, avatar } = currentUser;
-
   return (
     <main>
       <section className='profile'>

@@ -113,6 +113,7 @@ const App = () => {
         .checkToken(jwt)
         .then((res) => {
           if (res) {
+            setEmail(res.email);
             setLoggedIn(true);
           }
         })
@@ -127,7 +128,7 @@ const App = () => {
       .register(password, email)
       .then((data) => {
         setMessage(true);
-        navigate('/sign-in');
+        navigate('/signin');
       })
       .catch((err) => {
         setMessage(false);
@@ -168,8 +169,7 @@ const App = () => {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     if (isLiked) {
       api
         .removeLikeCard(card._id, !isLiked)
@@ -225,7 +225,12 @@ const App = () => {
             path='/'
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Header onSignOut={onSignOut} email={email} toLink={'/'} textLink={'Выйти'} />
+                <Header
+                  onSignOut={onSignOut}
+                  email={email}
+                  toLink={'/'}
+                  textLink={'Выйти'}
+                />
                 <Main
                   onEditProfile={handleEditProfileClick}
                   onAddPlace={handleAddPlaceClick}
@@ -241,15 +246,13 @@ const App = () => {
           />
 
           <Route
-            path='/sign-up'
+            path='/signup'
             element={<Register onRegister={onRegister} />}
           />
-          <Route path='/sign-in' element={<Login onLogin={onLogin} />} />
+          <Route path='/signin' element={<Login onLogin={onLogin} />} />
           <Route
             path='*'
-            element={
-              loggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
-            }
+            element={loggedIn ? <Navigate to='/' /> : <Navigate to='/signin' />}
           />
         </Routes>
 
