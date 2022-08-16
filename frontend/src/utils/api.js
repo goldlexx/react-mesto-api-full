@@ -103,7 +103,7 @@ class Api {
 }
 
 const api = new Api({
-  url: 'http://api.mesto.travel.nomoredomains.sbs/',
+  url: 'https://api.mesto.travel.nomoredomains.sbs/',
   headers: {
     'Content-Type': 'application/json',
   },

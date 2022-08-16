@@ -22,18 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-const options = {
-  origin: [
-    'http://localhost:3000',
-    'http://mesto.travel.nomoredomains.sbs/',
-    'https://mesto.travel.nomoredomains.sbs/',
-    'http://api.mesto.travel.nomoredomains.sbs/',
-    'https://api.mesto.travel.nomoredomains.sbs/',
-  ],
-  credentials: true,
-};
-
-app.use('*', cors(options));
+app.use(cors());
 
 app.post(
   '/signin',
