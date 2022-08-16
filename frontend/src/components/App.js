@@ -40,29 +40,22 @@ const App = () => {
     selectedCard.link;
 
   useEffect(() => {
-    api
-      .getCardList()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch((err) => console.error(err));
-    api
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCardList()])
+        .then(([user, items]) => {
+          setCurrentUser(user);
+          setCards(items);
+          navigate('/');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     tokenCheck();
   }, []);
-
-  useEffect(() => {
-    if (loggedIn) {
-      navigate('/');
-    }
-  }, [loggedIn]);
 
   useEffect(() => {
     const closeByEscape = (evt) => {
