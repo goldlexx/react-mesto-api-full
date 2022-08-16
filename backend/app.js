@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
 const { limiter } = require('./utils/limiter');
@@ -13,36 +14,13 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  const { method } = req;
-
-  const allowedCors = [
-    'http://localhost:3000',
-    'http://mesto.travel.nomoredomains.sbs',
-    'https://mesto.travel.nomoredomains.sbs',
-  ];
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-
-  const requestHeaders = req.headers['access-control-request-headers'];
-
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-    return res.end();
-  }
-  next();
-});
-
 app.use(helmet());
 app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+app.use(cors());
 
 app.post(
   '/signin',
