@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
+const { PORT, DATABASE_URL } = require('./configuration');
 const { limiter } = require('./utils/limiter');
 const { ErrorNotFound } = require('./errors/allErrors');
 const { createUser, login } = require('./controllers/users');
@@ -12,7 +13,6 @@ const { auth } = require('./middlewares/auth');
 const { handleError } = require('./middlewares/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(helmet());
@@ -67,7 +67,7 @@ app.use((req, res, next) => {
 app.use(handleError);
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+  await mongoose.connect(DATABASE_URL);
   console.log('Connected to db');
 
   await app.listen(PORT);
