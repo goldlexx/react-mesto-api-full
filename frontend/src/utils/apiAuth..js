@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.onemore.nomoredomains.sbs';
+export const BASE_URL = 'http://api.mesto.travel.nomoredomains.sbs';
 
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
