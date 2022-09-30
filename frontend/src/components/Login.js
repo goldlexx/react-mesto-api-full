@@ -22,6 +22,7 @@ const Login = ({ onLogin }) => {
             action='#'
             className='authorization__form'
             onSubmit={handleSubmit}
+            noValidate
           >
             <fieldset className='authorization__content'>
               <h2 className='authorization__title'>Вход</h2>
