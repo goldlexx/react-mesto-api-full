@@ -6,12 +6,16 @@
   width: 100%;
   font-size: 18px;
   line-height: 22px;
+  color: white;
+  background: #4285f4;
   transition: 0.3s linear;
   cursor: pointer;
 }
 
-.authorization__submit-button:hover {
-  opacity: 0.85;
+.authorization__submit-button:disabled {
+  color: #c2c2c2;
+  background: #f8f8f8;
+  pointer-events: none;
 }
 
 @media (max-width: 710px) {

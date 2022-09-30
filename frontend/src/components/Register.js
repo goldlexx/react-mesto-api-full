@@ -1,16 +1,20 @@
 import { Link } from 'react-router-dom';
-import { useForm } from '../hoocks/useForm';
+import { useFormWithValidation } from '../hoocks/useFormWithValidation';
 import Header from './Header';
 
-
 const Register = ({ onRegister }) => {
-  const controlInput = useForm();
-
+  const controlInput = useFormWithValidation();
+  const { email, password } = controlInput.errors;
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = controlInput.values;
     onRegister(email, password);
   };
+
+
+  const errorClassName = !controlInput.isValid
+    ? 'authorization__error authorization__error_visible'
+    : 'authorization__error';
 
   return (
     <>
@@ -21,6 +25,7 @@ const Register = ({ onRegister }) => {
             action='#'
             className='authorization__form'
             onSubmit={handleSubmit}
+            noValidate
           >
             <fieldset className='authorization__content'>
               <h2 className='authorization__title'>Регистрация</h2>
@@ -38,6 +43,7 @@ const Register = ({ onRegister }) => {
                   maxLength='40'
                   required
                 />
+                <span className={errorClassName}>{email}</span>
               </label>
               <label className='authorization__form-field'>
                 <input
@@ -52,8 +58,13 @@ const Register = ({ onRegister }) => {
                   maxLength='40'
                   required
                 />
+                <span className={errorClassName}>{password}</span>
               </label>
-              <button type='submit' className='authorization__submit-button'>
+              <button
+                type='submit'
+                className='authorization__submit-button'
+                disabled={!controlInput.isValid}
+              >
                 Зарегистрироваться
               </button>
             </fieldset>

@@ -60,6 +60,7 @@
 @import url(./blocks/authorization/__form-field/authorization__form-field.css);
 @import url(./blocks/authorization/__input/authorization__input.css);
 @import url(./blocks/authorization/__submit-button/authorization__submit-button.css);
+@import url(./blocks/authorization/__error/authorization__error.css);
 @import url(./blocks/question/question.css);
 @import url(./blocks/question/__text/question__text.css);
 @import url(./blocks/question/__login/question__login.css);

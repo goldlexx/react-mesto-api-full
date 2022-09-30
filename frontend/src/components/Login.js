@@ -1,14 +1,17 @@
 import Header from './Header';
-import { useForm } from '../hoocks/useForm';
+import { useFormWithValidation } from '../hoocks/useFormWithValidation';
 
 const Login = ({ onLogin }) => {
-  const controlInput = useForm();
-
+  const controlInput = useFormWithValidation();
+  const { email, password } = controlInput.errors;
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = controlInput.values;
     onLogin(email, password);
   };
+  const errorClassName = !controlInput.isValid
+    ? 'authorization__error authorization__error_visible'
+    : 'authorization__error';
 
   return (
     <>
@@ -36,6 +39,7 @@ const Login = ({ onLogin }) => {
                   maxLength='40'
                   required
                 />
+                <span className={errorClassName}>{email}</span>
               </label>
               <label className='authorization__form-field'>
                 <input
@@ -50,8 +54,13 @@ const Login = ({ onLogin }) => {
                   maxLength='40'
                   required
                 />
+                <span className={errorClassName}>{password}</span>
               </label>
-              <button type='submit' className='authorization__submit-button'>
+              <button
+                type='submit'
+                className='authorization__submit-button'
+                disabled={!controlInput.isValid}
+              >
                 Войти
               </button>
             </fieldset>
