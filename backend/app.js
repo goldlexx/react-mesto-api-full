@@ -29,7 +29,7 @@ app.post(
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string().required(),
+      password: Joi.string().min(8).required(),
     }),
   }),
   login,
@@ -40,7 +40,7 @@ app.post(
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string().required(),
+      password: Joi.string().min(8).required(),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
       avatar: Joi.string().pattern(
@@ -56,9 +56,9 @@ app.use(auth);
 app.use('/users', require('./routes/user'));
 app.use('/cards', require('./routes/card'));
 
-app.use(errorLogger);
-
 app.use(errors());
+
+app.use(errorLogger);
 
 app.use((req, res, next) => {
   next(new ErrorNotFound('Путь не найден'));
@@ -68,10 +68,21 @@ app.use(handleError);
 
 async function main() {
   await mongoose.connect(DATABASE_URL);
-  console.log('Connected to db');
-
-  await app.listen(PORT);
-  console.log(`App listening on port ${PORT}`);
+  await new Promise((resolve, reject) => {
+    const server = app.listen(PORT, () => {
+      console.log(`App listening on port ${PORT}`);
+      resolve();
+    });
+    server.once('error', reject);
+  });
 }
 
-main();
+if (require.main === module) {
+  main().catch(async (err) => {
+    console.error('Failed to start the server:', err.message);
+    await mongoose.disconnect().catch(() => {});
+    process.exitCode = 1;
+  });
+}
+
+module.exports = app;
