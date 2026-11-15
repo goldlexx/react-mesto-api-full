@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
@@ -40,22 +40,18 @@ const App = () => {
     selectedCard.link;
 
   useEffect(() => {
-    if (loggedIn) {
-      Promise.all([api.getUserInfo(), api.getCardList()])
-        .then(([user, items]) => {
-          setCurrentUser(user);
-          setCards(items);
-          navigate('/');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [loggedIn]);
+    if (!loggedIn) return;
 
-  useEffect(() => {
-    tokenCheck();
-  }, []);
+    Promise.all([api.getUserInfo(), api.getCardList()])
+      .then(([user, items]) => {
+        setCurrentUser(user);
+        setCards(items);
+        navigate('/');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [loggedIn, navigate]);
 
   useEffect(() => {
     const closeByEscape = (evt) => {
@@ -99,7 +95,7 @@ const App = () => {
     setSelectedCard(card);
   };
 
-  const tokenCheck = () => {
+  const tokenCheck = useCallback(() => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       apiAuth
@@ -114,7 +110,11 @@ const App = () => {
           console.error(err);
         });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    tokenCheck();
+  }, [tokenCheck]);
 
   const onRegister = (email, password) => {
     apiAuth
@@ -213,6 +213,9 @@ const App = () => {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page__content'>
+        <p className='service-preview' role='status'>
+          UI preview: sign-in and photo data require the Mesto API. No account or data changes are simulated.
+        </p>
         <Routes>
           <Route
             path='/'

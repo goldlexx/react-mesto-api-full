@@ -7,7 +7,7 @@ import App from './components/App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL || '/'}>
       <App />
     </BrowserRouter>
   </StrictMode>

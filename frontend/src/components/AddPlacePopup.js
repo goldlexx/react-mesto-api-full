@@ -3,15 +3,15 @@ import { useForm } from '../hoocks/useForm';
 import PopupWithForm from './PopupWithForm';
 
 const AddPlacePopup = ({ isOpen, onClose, onUpdateCards }) => {
-  const controlInput = useForm();
+  const { values, handleChange, setValues } = useForm();
 
   useEffect(() => {
-    controlInput.setValues({});
-  }, [isOpen]);
+    setValues({});
+  }, [isOpen, setValues]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, link } = controlInput.values;
+    const { name, link } = values;
     onUpdateCards({
       name: name,
       link: link,
@@ -29,8 +29,8 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdateCards }) => {
     >
       <label className='popup__form-field'>
         <input
-          onChange={controlInput.handleChange}
-          value={controlInput?.values?.name || ''}
+          onChange={handleChange}
+          value={values?.name || ''}
           type='text'
           name='name'
           placeholder='Название'
@@ -45,8 +45,8 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdateCards }) => {
       </label>
       <label className='popup__form-field'>
         <input
-          onChange={controlInput.handleChange}
-          value={controlInput?.values?.link || ''}
+          onChange={handleChange}
+          value={values?.link || ''}
           type='url'
           name='link'
           placeholder='Ссылка на картинку'

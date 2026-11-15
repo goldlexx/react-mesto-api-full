@@ -64,3 +64,13 @@
 @import url(./blocks/question/question.css);
 @import url(./blocks/question/__text/question__text.css);
 @import url(./blocks/question/__login/question__login.css);
+.service-preview {
+  margin: 12px auto;
+  max-width: 880px;
+  padding: 10px 14px;
+  border-left: 3px solid #2f80ed;
+  background: #f2f7fd;
+  color: #1f1f1f;
+  font-size: 14px;
+  line-height: 1.5;
+}

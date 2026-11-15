@@ -5,17 +5,17 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
   const currentUser = useContext(CurrentUserContext);
-  const controlInput = useForm();
+  const { values, handleChange, setValues } = useForm();
 
   useEffect(() => {
-    controlInput.setValues({
+    setValues({
       name: currentUser.name,
       about: currentUser.about,
     });
-  }, [currentUser, isOpen]);
+  }, [currentUser.name, currentUser.about, isOpen, setValues]);
 
   const handleSubmit = (e) => {
-    const { name, about } = controlInput.values;
+    const { name, about } = values;
     e.preventDefault();
     onUpdateUser({
       name,
@@ -34,8 +34,8 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     >
       <label className='popup__form-field'>
         <input
-          onChange={controlInput.handleChange}
-          value={controlInput?.values?.name || ''}
+          onChange={handleChange}
+          value={values?.name || ''}
           type='text'
           name='name'
           id='name'
@@ -50,8 +50,8 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
       </label>
       <label className='popup__form-field'>
         <input
-          onChange={controlInput.handleChange}
-          value={controlInput?.values?.about || ''}
+          onChange={handleChange}
+          value={values?.about || ''}
           type='text'
           name='about'
           placeholder='Введите профессию'
