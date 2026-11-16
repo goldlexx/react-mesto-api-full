@@ -7,7 +7,10 @@
     "lint": "npx eslint .",
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "test": "node --test"
+    "test": "node --test",
+    "cf:dev": "wrangler dev",
+    "cf:migrate": "wrangler d1 migrations apply mesto-api-db --remote",
+    "cf:deploy": "wrangler deploy"
   },
   "repository": {
     "type": "git",

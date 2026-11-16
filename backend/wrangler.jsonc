@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mesto-api",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-16",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mesto-api-db",
+      "database_id": "15a8bb28-4da7-43fb-a913-d5024f02002a",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

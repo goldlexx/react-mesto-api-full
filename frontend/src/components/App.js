@@ -213,9 +213,6 @@ const App = () => {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page__content'>
-        <p className='service-preview' role='status'>
-          UI preview: sign-in and photo data require the Mesto API. No account or data changes are simulated.
-        </p>
         <Routes>
           <Route
             path='/'
