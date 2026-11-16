@@ -6,6 +6,7 @@ npm-debug.log*
 # Dependency directory
 node_modules
 .env
+.dev.vars
 .wrangler
 
 # Optional npm cache directory

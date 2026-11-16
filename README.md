@@ -1,42 +1,36 @@
 # Mesto Full-stack
 
-A photo-sharing application with user registration, authentication, profile editing, and photo-card interactions.
+A photo-sharing application with account registration, profile editing, photo cards, and likes.
+
+## Live Demo
+
+- [Mesto website](https://goldlexx.github.io/react-mesto-api-full/)
+- [Mesto API Worker](https://mesto-api.rustik-yuldashev.workers.dev)
 
 ## Features
 
 - Register and sign in with JWT authentication
-- View and update profile details and avatar
-- Create, like, unlike, and delete photo cards
-- Validate request data and handle API errors centrally
+- View and update a user profile and avatar URL
+- Create photo cards, like or unlike cards, and delete your own cards
+- Store account, card, and like data in Cloudflare D1
 
-## Stack
+## Tech Stack
 
-React 18, React Router, Node.js, Express, MongoDB, Mongoose, JWT, Celebrate/Joi.
+- React 18, React Router, and Create React App
+- Cloudflare Workers and D1
+- Web Crypto API for password hashing and JWT signing
+- Legacy Express/MongoDB implementation retained for local development
 
-## Structure
+## Project Structure
 
 ```text
 frontend/  React client
-backend/   Express API and MongoDB models
+backend/   Cloudflare Worker, D1 schema, and legacy Express API
 ```
 
-## Screenshot
+## Getting Started
 
-![Mesto sign-in screen](screenshots/local-home.jpg)
-
-The screenshot shows the locally launched sign-in page. The legacy public deployment was unavailable during the previous check, so an authenticated live feed could not be confirmed.
-
-## Run locally
-
-Install and run a local MongoDB instance. Create `backend/.env` from `backend/.env.example`; set a random `JWT_SECRET` of at least 32 characters and a local `DATABASE_URL`.
-
-```bash
-cd backend
-npm ci
-npm run dev
-```
-
-In another terminal:
+Run the frontend locally:
 
 ```bash
 cd frontend
@@ -44,23 +38,12 @@ npm ci
 npm start
 ```
 
-The frontend API URL is configured in its utility modules. Change the local URL configuration if you are connecting it to the local API instead of the original course service.
+The client uses the deployed Mesto Worker by default. Set `REACT_APP_API_BASE_URL` before starting the app if you need to use another compatible API.
 
-## Tests
+The production Worker and D1 configuration are documented in [backend/README.md](backend/README.md). The retained Express server is a separate legacy option and requires a local MongoDB plus `backend/.env` configured from `.env.example`.
 
-The backend integration suite is `backend/test/api.integration.test.js`. Set `MONGODB_TEST_URI` to a disposable database whose name ends in `_test`, then run:
+The MongoDB integration suite may drop the database named by `MONGODB_TEST_URI`. Use only a disposable database whose name ends in `_test`; never point it at production or user data.
 
-```bash
-cd backend
-npm test
-```
+## Project Background
 
-The suite drops the selected test database before and after its run. Never point `MONGODB_TEST_URI` at a working or production database. Without this variable, the integration suite is skipped.
-
-## API routes
-
-- `POST /signup` and `POST /signin`
-- `GET /users`, `GET /users/me`, and profile update routes
-- `GET /cards`, `POST /cards`, and card operations under `/cards/:cardId`
-
-The API requires `JWT_SECRET` and `DATABASE_URL` from the environment; it has no built-in secret fallback.
+The original Mesto interface was created as a learning project during the Yandex Practicum web development course; the Cloudflare Worker and D1 backend were added later.

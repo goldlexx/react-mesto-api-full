@@ -1,36 +1,43 @@
-[![Tests](https://github.com/goldlexx/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
+# Mesto API
 
-# Проект "Mesto бэкенд". Создана в рамках учебы в [Яндекс.Практикум](https://praktikum.yandex.ru/) на курсе ["Веб-разработчик"](https://praktikum.yandex.ru/web/).
+The production Mesto API is a Cloudflare Worker backed by a dedicated Cloudflare D1 database.
 
-## Используемые технологии
-- Node.js
-- express.js
-- MongoDB
-- Mongoose
+## API
 
-## Директории
+- `POST /signup` and `POST /signin`
+- `GET /users`, `GET /users/me`, and `GET /users/:id`
+- `PATCH /users/me` and `PATCH /users/me/avatar`
+- `GET /cards`, `POST /cards`, and `DELETE /cards/:cardId`
+- `PUT /cards/:cardId/likes` and `DELETE /cards/:cardId/likes`
 
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
+Protected routes require a bearer JWT. Passwords are hashed with PBKDF2 through Web Crypto; the signing key is provided as the Cloudflare secret `JWT_SECRET`. Card images are stored as HTTP(S) links; this API does not upload files.
 
-## Запуск проекта
+## Cloudflare Setup
 
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+`worker.js` is the production entry point. `wrangler.jsonc` defines the `DB` binding, and SQL migrations in `migrations/` create the user, card, and like tables. The production database is separate from other portfolio projects.
 
-## Cloudflare Workers + D1
+For local Worker development, install the backend dependencies and create a local `.dev.vars` file containing a development-only `JWT_SECRET`:
 
-Production API runs from `worker.js`; its D1 binding and database migrations are configured in `wrangler.jsonc` and `migrations/`. The frontend uses the Worker URL by default. The Worker secret `JWT_SECRET` is managed with Wrangler and must never be committed.
+```text
+JWT_SECRET=use-a-long-random-local-value
+```
 
-- `npm run cf:dev` — run the Worker locally.
-- `npm run cf:migrate` — apply D1 migrations to the configured remote database.
-- `npm run cf:deploy` — deploy the Worker.
+Then run:
 
-Set or rotate the JWT secret with `wrangler secret put JWT_SECRET` from this directory. Keep the existing Express/MongoDB files for local legacy development; they are not used by the Cloudflare deployment.
+```bash
+npm ci
+npx wrangler d1 migrations apply mesto-api-db --local
+npm run cf:dev
+```
 
+For an authorized production maintenance session, `npm run cf:migrate` applies pending migrations and `npm run cf:deploy` publishes the Worker. Set the signing key through Wrangler secret management; never commit `.dev.vars`, keys, or tokens.
 
+## Legacy Express Server
 
+The original Express/Mongoose code remains available for local legacy development. It is not used by the deployed Worker. It requires a local MongoDB and `backend/.env` configured from `.env.example`.
 
+The MongoDB integration tests can drop the selected database. Set `MONGODB_TEST_URI` only to a disposable database whose name ends in `_test`; never use a production URI.
+
+## Project Background
+
+The original API was created as part of the Yandex Practicum web development course; the Cloudflare Worker and D1 implementation was added later.
