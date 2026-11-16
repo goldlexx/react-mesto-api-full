@@ -158,7 +158,7 @@ const App = () => {
       .then(() => {
         setCards((state) => state.filter((item) => item._id !== card._id));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleCardLike = (card) => {
@@ -169,14 +169,14 @@ const App = () => {
         .then((newCard) => {
           setStateCards(card._id, newCard);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     } else {
       api
         .addLikeCard(card._id, !isLiked)
         .then((newCard) => {
           setStateCards(card._id, newCard);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }
   };
 
@@ -187,7 +187,7 @@ const App = () => {
         setCurrentUser(res);
         closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleUpdateAvatar = (card) => {
@@ -197,7 +197,7 @@ const App = () => {
         setCurrentUser(res);
         closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleUpdateCards = (data) => {
@@ -207,7 +207,7 @@ const App = () => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -288,3 +288,4 @@ const App = () => {
 };
 
 export default App;
+
