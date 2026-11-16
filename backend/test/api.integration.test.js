@@ -17,6 +17,7 @@ if (testMongoUri) process.env.DATABASE_URL = testMongoUri;
 const app = require('../app');
 const Card = require('../models/card');
 const User = require('../models/user');
+const { handleError } = require('../middlewares/handleError');
 
 const testToken = jwt.sign(
   { _id: new mongoose.Types.ObjectId().toString() },
@@ -75,6 +76,7 @@ test('rejects invalid signup passwords and card URLs before database access', as
       method: 'POST',
       body: { name: 'Test User', email: 'test@example.test', password: 'short' },
     });
+    const unauthorizedCards = await sendRequest(port, '/cards');
     const card = await sendRequest(port, '/cards', {
       method: 'POST',
       token: testToken,
@@ -82,12 +84,33 @@ test('rejects invalid signup passwords and card URLs before database access', as
     });
 
     assert.equal(signup.status, 400);
+    assert.equal(unauthorizedCards.status, 401);
     assert.equal(card.status, 400);
   } finally {
     await new Promise((resolve) => {
       server.close(() => resolve());
     });
   }
+});
+
+test('hides internal error details from API responses', () => {
+  let responseStatus;
+  let responseBody;
+  const response = {
+    status(status) {
+      responseStatus = status;
+      return this;
+    },
+    send(body) {
+      responseBody = body;
+      return this;
+    },
+  };
+
+  handleError(new Error('database connection details'), {}, response, () => {});
+
+  assert.equal(responseStatus, 500);
+  assert.deepEqual(responseBody, { message: 'На сервере произошла ошибка' });
 });
 
 test('Mongoose rejects invalid avatar and card URLs without a database', () => {

@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
@@ -18,8 +17,8 @@ const app = express();
 app.use(helmet());
 app.use(limiter);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use(cors());
@@ -70,7 +69,7 @@ async function main() {
   await mongoose.connect(DATABASE_URL);
   await new Promise((resolve, reject) => {
     const server = app.listen(PORT, () => {
-      console.log(`App listening on port ${PORT}`);
+      console.info(`App listening on port ${PORT}`);
       resolve();
     });
     server.once('error', reject);
@@ -80,7 +79,9 @@ async function main() {
 if (require.main === module) {
   main().catch(async (err) => {
     console.error('Failed to start the server:', err.message);
-    await mongoose.disconnect().catch(() => {});
+    await mongoose.disconnect().catch((disconnectError) => {
+      console.error('Failed to disconnect from MongoDB after startup error:', disconnectError.message);
+    });
     process.exitCode = 1;
   });
 }
