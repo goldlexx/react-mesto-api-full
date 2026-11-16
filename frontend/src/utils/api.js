@@ -1,3 +1,6 @@
+import { API_BASE_URL_WITH_SLASH } from './config';
+import checkResponse from './checkResponse';
+
 class Api {
   constructor({ url, headers }) {
     this._url = url;
@@ -8,14 +11,8 @@ class Api {
     const jwt = localStorage.getItem('jwt');
     return jwt ? { Authorization: `Bearer ${jwt}` } : {};
   }
-
-
   checkError(res) {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
+    return checkResponse(res);
   }
 
   getUserInfo() {
@@ -103,7 +100,7 @@ class Api {
 }
 
 const api = new Api({
-  url: 'https://api.mesto.travel.nomoredomains.sbs/',
+  url: API_BASE_URL_WITH_SLASH,
   headers: {
     'Content-Type': 'application/json',
   },

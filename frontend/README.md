@@ -1,62 +1,32 @@
-# Проектная работа: "Mesto (Auth)". Создана в рамках учебы в [Яндекс.Практикум](https://praktikum.yandex.ru/) на курсе ["Веб-разработчик"](https://praktikum.yandex.ru/web/).
+# Mesto — React frontend
 
-## Описание:
+Mesto is a photo-sharing interface built with React. This repository contains the frontend; sign-in, profile, card, and image data require a compatible Mesto API.
 
-"Mesto" - это интерактивная страница, где пользователи могут делиться фотографиями. В работе применены расширенные возможности HTML, CSS и JavaScript.
-В данной работе реализован функционал  регистрации и авторизации.
+## Run locally
 
-| **GithHub Pages** | [Auth Mesto](https://goldlexx.github.io/react-mesto-auth/) |
-| ----------------- | -------------------------------------------------------------------- |
-
-## Примененные знания
-* Верстка
-  - Соверменная верстка с использованием Flexbox и Grid Layout
-  - Семантическая верстка
-  - Адаптивная верстка сайта для разных экранов (от 320 до 1280+)
-  - Верстка форм (текстовые поля и кнопки)
-  - Методология БЭМ
-
-* React
-  - использование Create React App
-  - хуки `useState` и `useEffect`
-  - поднятие стейта
-  - глобальный стейт через React Context
-  - управляемые компоненты в элементах формы
-  - использование реф для прямого доступа к DOM-элементам
-
-* React Router
-  - реализован функционал  регистрации и авторизации
-  - защищенные маршруты
-  - авторизация через JWT
-  - работа с Local Starage
-
-
-## Инструкция по установке:
-
+```sh
+git clone https://github.com/goldlexx/react-mesto-api-full.git
+cd react-mesto-api-full/frontend
+npm install
+npm start
 ```
-git clone https://goldlexx.github.io/react-mesto-auth.git
+
+## API configuration
+
+Set `REACT_APP_API_BASE_URL` to the base URL of a compatible Mesto backend before starting or building the app. It defaults to the API hostname historically configured for this project; that service is currently unavailable, so authentication and account-backed data may not work until a valid API is configured.
+
+```sh
+REACT_APP_API_BASE_URL=https://your-api.example npm start
 ```
-Запустите локальный сервер разработки с функцией перезагрузки в реальном времени для статических и динамических страниц - [How do you set up a local testing server? (MDN web docs)](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server)
 
+The interface does not create demo accounts or substitute fake profile/card data.
 
-## Будущая доработка проекта будет включать в себя:
+## Build and test
 
-* Адаптив бургер меню
-
-## Языки:
-
-* JavaScript
-* фреймворк React
-
-## Макет проектной работы в Figma:
-
-* [Макет](https://www.figma.com/file/5H3gsn5lIGPwzBPby9jAOo/JavaScript.-Sprint-12)
-
-
-
-
-
-
+```sh
+npm test -- --watchAll=false
+npm run build
+```
 
 
 

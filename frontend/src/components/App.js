@@ -13,7 +13,7 @@ import Login from './Login';
 import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api';
-import * as apiAuth from '../utils/apiAuth.';
+import * as apiAuth from '../utils/apiAuth';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
