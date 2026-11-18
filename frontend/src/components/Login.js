@@ -1,7 +1,7 @@
 import Header from './Header';
 import { useFormWithValidation } from '../hoocks/useFormWithValidation';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, pending, error }) => {
   const controlInput = useFormWithValidation();
   const { email, password } = controlInput.errors;
   const handleSubmit = (e) => {
@@ -32,7 +32,7 @@ const Login = ({ onLogin }) => {
                   type='email'
                   name='email'
                   placeholder='Email'
-                  autoComplete='off'
+                  autoComplete='email'
                   className='authorization__input'
                   onChange={controlInput.handleChange}
                   value={controlInput?.values?.email || ''}
@@ -47,7 +47,7 @@ const Login = ({ onLogin }) => {
                   type='password'
                   name='password'
                   placeholder='Пароль'
-                  autoComplete='off'
+                  autoComplete='current-password'
                   className='authorization__input'
                   onChange={controlInput.handleChange}
                   value={controlInput?.values?.password || ''}
@@ -57,12 +57,13 @@ const Login = ({ onLogin }) => {
                 />
                 <span className={errorClassName}>{password}</span>
               </label>
+              {error && <p role='alert'>Не удалось войти. Проверьте подключение и данные для входа.</p>}
               <button
                 type='submit'
                 className='authorization__submit-button'
-                disabled={!controlInput.isValid}
+                disabled={pending || !controlInput.isValid}
               >
-                Войти
+                {pending ? 'Подождите…' : 'Войти'}
               </button>
             </fieldset>
           </form>

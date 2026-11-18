@@ -109,9 +109,10 @@ async function route(request, env) {
 
   if (method === 'POST' && path === '/signin') {
     const input = await bodyOf(request);
-    const user = await db.prepare('SELECT _id,password_hash,password_salt FROM users WHERE email = ?').bind(String(input.email || '').trim().toLowerCase()).first();
+    const user = await db.prepare('SELECT _id,name,about,avatar,email,password_hash,password_salt FROM users WHERE email = ?').bind(String(input.email || '').trim().toLowerCase()).first();
     if (!user || typeof input.password !== 'string' || await hashPassword(input.password, user.password_salt) !== user.password_hash) throw new HttpError(401, 'Неправильные почта или пароль');
-    return [{ token: await makeToken(user._id, env.JWT_SECRET) }, 200];
+    const { _id, name, about, avatar, email } = user;
+    return [{ token: await makeToken(_id, env.JWT_SECRET), user: { _id, name, about, avatar, email } }, 200];
   }
 
   const userId = await authenticate(request, env);
@@ -145,11 +146,12 @@ async function route(request, env) {
   }
 
   if (method === 'GET' && path === '/cards') {
-    const { results: cards } = await db.prepare('SELECT _id,name,link,owner,created_at AS createdAt FROM cards ORDER BY created_at DESC').all();
-    const { results: likes } = await db.prepare('SELECT card_id,user_id FROM card_likes').all();
-    const likesByCard = new Map();
-    for (const like of likes) likesByCard.set(like.card_id, [...(likesByCard.get(like.card_id) || []), like.user_id]);
-    return [cards.map((card) => ({ ...card, likes: likesByCard.get(card._id) || [] })), 200];
+    const { results } = await db.prepare(`
+      SELECT c._id, c.name, c.link, c.owner, c.created_at AS createdAt,
+        (SELECT json_group_array(user_id) FROM card_likes WHERE card_id = c._id) AS likes
+      FROM cards c ORDER BY c.created_at DESC
+    `).all();
+    return [results.map(card => ({ ...card, likes: JSON.parse(card.likes) })), 200];
   }
   if (method === 'POST' && path === '/cards') {
     const input = await bodyOf(request);

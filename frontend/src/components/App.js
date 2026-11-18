@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
@@ -20,6 +19,8 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 const App = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState({});
+  const [feedLoading, setFeedLoading] = useState(true);
+  const [feedMessage, setFeedMessage] = useState('');
   const [cards, setCards] = useState([]);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
@@ -29,6 +30,8 @@ const App = () => {
     link: '',
   });
   const [loggedIn, setLoggedIn] = useState(false);
+  const [authPending, setAuthPending] = useState(false);
+  const [loginError, setLoginError] = useState(false);
   const [email, setEmail] = useState('practicum@yandex.ru');
   const [IsInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
   const [message, setMessage] = useState(false);
@@ -42,16 +45,16 @@ const App = () => {
   useEffect(() => {
     if (!loggedIn) return;
 
-    Promise.all([api.getUserInfo(), api.getCardList()])
-      .then(([user, items]) => {
-        setCurrentUser(user);
-        setCards(items);
-        navigate('/');
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [loggedIn, navigate]);
+    let active = true;
+    api.getCardList().then(items => {
+      if (active) setCards(items);
+    }).catch(() => {
+      if (active) setFeedMessage('Не удалось загрузить карточки. Обновите страницу.');
+    }).finally(() => {
+      if (active) setFeedLoading(false);
+    });
+    return () => { active = false; };
+  }, [loggedIn]);
 
   useEffect(() => {
     const closeByEscape = (evt) => {
@@ -102,6 +105,7 @@ const App = () => {
         .checkToken(jwt)
         .then((res) => {
           if (res) {
+            setCurrentUser(res);
             setEmail(res.email);
             setLoggedIn(true);
           }
@@ -117,6 +121,7 @@ const App = () => {
   }, [tokenCheck]);
 
   const onRegister = (email, password) => {
+    setAuthPending(true);
     apiAuth
       .register(password, email)
       .then((data) => {
@@ -128,27 +133,34 @@ const App = () => {
         console.error(err);
       })
       .finally(() => {
+        setAuthPending(false);
         setIsInfoToolTipOpen(true);
       });
   };
 
   const onLogin = (email, password) => {
+    setAuthPending(true);
+    setLoginError(false);
     apiAuth
       .authorize(email, password)
-      .then((res) => {
-        if (res.token) {
-          localStorage.setItem('jwt', res.token);
-        }
+      .then(async (res) => {
+        if (!res.token) throw new Error('Missing session token');
+        localStorage.setItem('jwt', res.token);
+        setCurrentUser(res.user || await api.getUserInfo());
         setEmail(email);
         setLoggedIn(true);
+        navigate('/');
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(() => setLoginError(true))
+      .finally(() => setAuthPending(false));
   };
 
   const onSignOut = () => {
     localStorage.removeItem('jwt');
+    setCards([]);
+    setCurrentUser({});
+    setFeedMessage('');
+    setFeedLoading(true);
     setLoggedIn(false);
   };
 
@@ -204,7 +216,7 @@ const App = () => {
     api
       .addNewCard(data)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards(items => [newCard, ...items]);
         closeAllPopups();
       })
       .catch((err) => console.error(err));
@@ -213,6 +225,7 @@ const App = () => {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page__content'>
+        {loggedIn && (feedLoading || feedMessage) && <p role='status'>{feedMessage || 'Загружаем карточки…'}</p>}
         <Routes>
           <Route
             path='/'
@@ -240,9 +253,9 @@ const App = () => {
 
           <Route
             path='/signup'
-            element={<Register onRegister={onRegister} />}
+            element={<Register pending={authPending} onRegister={onRegister} />}
           />
-          <Route path='/signin' element={<Login onLogin={onLogin} />} />
+          <Route path='/signin' element={loggedIn ? <Navigate to='/' replace /> : <Login pending={authPending} error={loginError} onLogin={onLogin} />} />
           <Route
             path='*'
             element={loggedIn ? <Navigate to='/' /> : <Navigate to='/signin' />}
@@ -265,14 +278,6 @@ const App = () => {
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onUpdateCards={handleUpdateCards}
-        />
-
-        <PopupWithForm
-          name='confirm-delete'
-          title='Вы уверены?'
-          titleBtn='Да'
-          isOpen={false}
-          onClose={closeAllPopups}
         />
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />

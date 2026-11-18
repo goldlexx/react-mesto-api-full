@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useFormWithValidation } from '../hoocks/useFormWithValidation';
 import Header from './Header';
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegister, pending }) => {
   const controlInput = useFormWithValidation();
   const { email, password } = controlInput.errors;
   const handleSubmit = (e) => {
@@ -35,7 +35,7 @@ const Register = ({ onRegister }) => {
                   type='email'
                   name='email'
                   placeholder='Email'
-                  autoComplete='off'
+                  autoComplete='email'
                   className='authorization__input'
                   onChange={controlInput.handleChange}
                   value={controlInput?.values?.email || ''}
@@ -50,7 +50,7 @@ const Register = ({ onRegister }) => {
                   type='password'
                   name='password'
                   placeholder='Пароль'
-                  autoComplete='off'
+                  autoComplete='new-password'
                   className='authorization__input'
                   onChange={controlInput.handleChange}
                   value={controlInput?.values?.password || ''}
@@ -63,9 +63,9 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 className='authorization__submit-button'
-                disabled={!controlInput.isValid}
+                disabled={pending || !controlInput.isValid}
               >
-                Зарегистрироваться
+                {pending ? 'Подождите…' : 'Зарегистрироваться'}
               </button>
             </fieldset>
           </form>

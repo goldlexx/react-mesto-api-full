@@ -35,6 +35,8 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
       <img
         className='elements__image'
         alt={name}
+        loading="lazy"
+        decoding="async"
         src={link}
         onClick={handleLikeClick}
       />
