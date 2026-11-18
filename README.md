@@ -77,3 +77,5 @@ npm run cf:dev
 ## Тестирование
 
 В `frontend/` команда `npm test -- --watchAll=false` проверяет обработку HTTP-ответов. `npm run build` собирает клиент. В `backend/` команда `npm test` относится к прежнему Express API. Для интеграционных тестов MongoDB используйте отдельную одноразовую базу с суффиксом `_test` в `MONGODB_TEST_URI`: набор тестов очищает данные.
+
+В манифесте серверной части указана лицензия ISC. [package.json](backend/package.json)
